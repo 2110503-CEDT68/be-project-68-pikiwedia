@@ -8,7 +8,7 @@ dotenv.config({
     path: "./config/config.env"
 });
 
-const limiter = require("./middlewares/rateLimiter");
+const limiter = require("./middleware/rateLimiter");
 const swaggerSpec = require("./config/swagger");
 const connectDB = require("./config/db");
 const healthRoutes = require("./routes/health");

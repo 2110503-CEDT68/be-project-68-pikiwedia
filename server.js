@@ -12,6 +12,7 @@ const limiter = require("./middlewares/rateLimiter");
 const swaggerSpec = require("./config/swagger");
 const connectDB = require("./config/db");
 const healthRoutes = require("./routes/health");
+const authRoutes = require("./routes/auth");
 
 connectDB();
 
@@ -30,7 +31,9 @@ app.get("/", (req, res) => {
     });
 });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use("/api/health", healthRoutes);
+app.use("/api/auth", authRoutes);
 
 // Global 404 and 500 error handlers
 app.use((req, res, next) => {

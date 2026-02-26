@@ -13,7 +13,17 @@ const swaggerDocument = {
                 url: "http://localhost:5000",
                 description: "Local development server"
             }
-        ]
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                    description: "Enter your JWT token"
+                }
+            }
+        }
     },
     apis: ["./routes/*.js"]
 };

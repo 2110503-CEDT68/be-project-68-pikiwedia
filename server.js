@@ -11,8 +11,11 @@ dotenv.config({
 const limiter = require("./middlewares/rateLimiter");
 const swaggerSpec = require("./config/swagger");
 const connectDB = require("./config/db");
+
+//Route files
 const healthRoutes = require("./routes/health");
 const authRoutes = require("./routes/auth");
+const reservations = require("./routes/reservations");
 
 connectDB();
 
@@ -34,6 +37,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/reservations", reservations)
 
 // Global 404 and 500 error handlers
 app.use((req, res, next) => {

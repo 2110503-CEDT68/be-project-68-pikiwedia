@@ -20,7 +20,7 @@ exports.getMassages = async (req, res, next) => {
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
         // 4. ค้นหาข้อมูลพื้นฐาน (รองรับการทำ Virtual Populate ไปยัง Reservations)
-        query = Massage.find(JSON.parse(queryStr)).populate('reservations');
+        query = Massage.find(JSON.parse(queryStr));
 
         // 5. Select Fields (เลือกเฉพาะคอลัมน์ที่ต้องการ)
         if (req.query.select) {

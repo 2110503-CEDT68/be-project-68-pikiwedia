@@ -74,6 +74,17 @@ exports.getMe = async (req, res) => {
 exports.register = async (req, res) => {
     const { name, tel, email, password } = req.body;
     try {
+        const telRegex = /^\d{3}-\d{3}-\d{4}$/;
+        if (!telRegex.test(tel)) {
+            return res.status(400).json({
+                success: false,
+                message: "Error: Telephone number must be in the format xxx-xxx-xxxx"
+            });
+        }
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: "Error: Email already in use" });
+        }
         const user = await User.create({ name, tel, email, password });
         sendTokenResponse(user, 201, res);
     } catch (error) {

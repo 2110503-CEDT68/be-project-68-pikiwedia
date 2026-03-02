@@ -1,9 +1,6 @@
 const express = require('express');
 const { getMassages, getMassage, createMassage, updateMassage, deleteMassage } = require('../controllers/massages');
 
-//Include other resource routers
-const reservationRouter = require('./reservations');
-
 const router = express.Router({ mergeParams: true });
 
 // auth middleware

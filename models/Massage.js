@@ -31,7 +31,7 @@ const MassageSchema = new mongoose.Schema({
     },
     picture: {
         type: String,
-        default: 'no-photo.jpg'
+        default: 'https://placehold.co/600x400/EEE/31343C?font=source-sans-pro&text=No%20Image'
     },
     price: {
         type: Number,

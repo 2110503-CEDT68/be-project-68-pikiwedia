@@ -16,7 +16,7 @@ const connectDB = require("./config/db");
 const healthRoutes = require("./routes/health");
 const authRoutes = require("./routes/auth");
 const reservations = require("./routes/reservations");
-
+const massages = require('./routes/massages');
 connectDB();
 
 const app = express();
@@ -38,7 +38,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/reservations", reservations)
-
+app.use('/api/v1/massages', massages);
 // Global 404 and 500 error handlers
 app.use((req, res, next) => {
     res.status(404).json({

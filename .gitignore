@@ -5,3 +5,4 @@ node_modules/*
 config/config.env
 tests/api-tester.html
 tests/frontend.html
+logs.txt

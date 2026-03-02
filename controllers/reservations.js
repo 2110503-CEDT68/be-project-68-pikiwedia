@@ -69,6 +69,13 @@ exports.addReservation = async (req, res, next) =>{
         const massageId = req.params.massageId || req.body.massage;
         req.body.massage = massageId;
 
+        // Validate and normalise reserveDate before hitting Mongoose
+        const parsedDate = new Date(req.body.reserveDate);
+        if (!req.body.reserveDate || isNaN(parsedDate.getTime())) {
+            return res.status(400).json({ success: false, message: 'Please provide a valid reserveDate (ISO 8601 format, e.g. 2026-03-05T14:00:00Z)' });
+        }
+        req.body.reserveDate = parsedDate;
+
         const massage = await Massage.findById(massageId);
 
         if(!massage){
@@ -110,7 +117,15 @@ exports.updateReservation = async (req, res, next) =>{
             return res.status(401).json({success: false, message: `User ${req.user.id} is not authorized this appointment`});
         }
 
-        const allowedUpdates = { reserveDate: req.body.reserveDate };
+        const allowedUpdates = {};
+        if (req.body.reserveDate !== undefined) {
+            const parsedDate = new Date(req.body.reserveDate);
+            if (isNaN(parsedDate.getTime())) {
+                return res.status(400).json({ success: false, message: 'Please provide a valid reserveDate (ISO 8601 format, e.g. 2026-03-05T14:00:00Z)' });
+            }
+            allowedUpdates.reserveDate = parsedDate;
+        }
+
         reservation = await Reservation.findByIdAndUpdate(req.params.id, allowedUpdates, {
             new: true,
             runValidators: true

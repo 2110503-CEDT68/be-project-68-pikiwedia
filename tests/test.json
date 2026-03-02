@@ -242,7 +242,9 @@
             "exec": [
               "const future = new Date();",
               "future.setDate(future.getDate() + 3);",
-              "pm.collectionVariables.set('reserve_date', future.toISOString());"
+              "// Strip milliseconds to produce a clean ISO string Mongoose can always parse",
+              "const isoDate = future.toISOString().split('.')[0] + 'Z';",
+              "pm.collectionVariables.set('reserve_date', isoDate);"
             ],
             "type": "text/javascript"
           }
@@ -433,7 +435,9 @@
             "exec": [
               "const future = new Date();",
               "future.setDate(future.getDate() + 7);",
-              "pm.collectionVariables.set('updated_date', future.toISOString());"
+              "// Strip milliseconds to produce a clean ISO string Mongoose can always parse",
+              "const isoDate = future.toISOString().split('.')[0] + 'Z';",
+              "pm.collectionVariables.set('updated_date', isoDate);"
             ],
             "type": "text/javascript"
           }
@@ -664,7 +668,9 @@
             "exec": [
               "const future = new Date();",
               "future.setDate(future.getDate() + 14);",
-              "pm.collectionVariables.set('admin_updated_date', future.toISOString());"
+              "// Strip milliseconds to produce a clean ISO string Mongoose can always parse",
+              "const isoDate = future.toISOString().split('.')[0] + 'Z';",
+              "pm.collectionVariables.set('admin_updated_date', isoDate);"
             ],
             "type": "text/javascript"
           }

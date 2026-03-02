@@ -80,10 +80,13 @@ async function buildUsers(count, role) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(CONFIG.users.password, salt);
 
-    return Array.from({ length: count }, () => ({
+    return Array.from({ length: count }, (_, i) => ({
         name: faker.person.fullName(),
         tel: generateTel(),
-        email: faker.internet.email({ provider: 'example.com' }).toLowerCase(),
+        // First admin always uses a fixed, predictable email
+        email: (role === 'admin' && i === 0)
+            ? 'admin@example.com'
+            : faker.internet.email({ provider: 'example.com' }).toLowerCase(),
         password: hashedPassword,
         role
     }));

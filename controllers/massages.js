@@ -40,7 +40,7 @@ exports.getMassages = async (req, res, next) => {
     const endIndex = page * limit;
 
     try {
-        const total = await Massage.countDocuments();
+        const total = await Massage.countDocuments(JSON.parse(queryStr));
         query = query.skip(startIndex).limit(limit);
 
         // Execute Query
@@ -58,6 +58,7 @@ exports.getMassages = async (req, res, next) => {
         res.status(200).json({
             success: true,
             count: massages.length,
+            totalCount: total,
             pagination,
             data: massages
         });

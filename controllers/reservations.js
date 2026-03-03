@@ -72,7 +72,7 @@ exports.getReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate({
             path: 'massage',
-            select: 'name decription tel'
+            select: 'name province tel'
         });
 
         if (!reservation) {
@@ -91,9 +91,17 @@ exports.getReservation = async (req, res, next) => {
 //@access   Private
 exports.addReservation = async (req, res, next) => {
     try {
-        req.body.massage = req.params.massageId;
+        const massageId = req.params.massageId || req.body.massage;
+        req.body.massage = massageId;
 
-        const massage = await Massage.findById(req.params.massageId);
+        // Validate and normalise reserveDate before hitting Mongoose
+        const parsedDate = new Date(req.body.reserveDate);
+        if (!req.body.reserveDate || isNaN(parsedDate.getTime())) {
+            return res.status(400).json({ success: false, message: 'Please provide a valid reserveDate (ISO 8601 format, e.g. 2026-03-05T14:00:00Z)' });
+        }
+        req.body.reserveDate = parsedDate;
+
+        const massage = await Massage.findById(massageId);
 
         if (!massage) {
             return res.status(400).json({ success: false, message: `No Massage with the id of ${req.params.massageId}` });
@@ -131,7 +139,16 @@ exports.updateReservation = async (req, res, next) => {
             return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized this appointment` });
         }
 
-        reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
+        const allowedUpdates = {};
+        if (req.body.reserveDate !== undefined) {
+            const parsedDate = new Date(req.body.reserveDate);
+            if (isNaN(parsedDate.getTime())) {
+                return res.status(400).json({ success: false, message: 'Please provide a valid reserveDate (ISO 8601 format, e.g. 2026-03-05T14:00:00Z)' });
+            }
+            allowedUpdates.reserveDate = parsedDate;
+        }
+
+        reservation = await Reservation.findByIdAndUpdate(req.params.id, allowedUpdates, {
             new: true,
             runValidators: true
         });

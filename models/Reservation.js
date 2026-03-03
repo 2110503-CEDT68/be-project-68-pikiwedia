@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Massage = require('./Massage');
 
 const ReservationSchema = new mongoose.Schema({
     reserveDate: {

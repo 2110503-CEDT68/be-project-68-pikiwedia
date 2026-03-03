@@ -80,10 +80,13 @@ async function buildUsers(count, role) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(CONFIG.users.password, salt);
 
-    return Array.from({ length: count }, () => ({
+    return Array.from({ length: count }, (_, i) => ({
         name: faker.person.fullName(),
         tel: generateTel(),
-        email: faker.internet.email({ provider: 'example.com' }).toLowerCase(),
+        // First admin always uses a fixed, predictable email
+        email: (role === 'admin' && i === 0)
+            ? 'admin@example.com'
+            : faker.internet.email({ provider: 'example.com' }).toLowerCase(),
         password: hashedPassword,
         role
     }));
@@ -99,6 +102,10 @@ function buildMassages(count) {
         } while (usedNames.has(name));
         usedNames.add(name);
 
+        const picCount = faker.number.int({ min: 1, max: 3 });
+        const pictures = Array.from({ length: picCount }, (_, i) =>
+            `https://picsum.photos/seed/${encodeURIComponent(name)}-${i}/600/400`
+        );
         return {
             name,
             address: faker.location.streetAddress(),
@@ -107,6 +114,7 @@ function buildMassages(count) {
             postalcode: generatePostalCode(),
             tel: generateTel(),
             price: faker.number.int({ min: 200, max: 3000 }),
+            pictures,
             ratingSum: 0,
             userRatingCount: 0,
             averageRating: 0

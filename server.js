@@ -1,3 +1,6 @@
+//const dns = require('node:dns');
+//dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -60,9 +63,9 @@ app.use(cookieParser());
 //Mount routers
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/reservations", reservations)
+app.use("/api/reservations", reservations);
 app.use('/api/massages', massages);
-
+app.use('/api/massages/:massageId/reservations', reservations);
 // Global 404 and 500 error handlers
 app.use((req, res, next) => {
     res.status(404).json({
